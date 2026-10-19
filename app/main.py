@@ -33,7 +33,7 @@ def get_patient(patient_id: str):
 
 
 @app.get("/sort")
-def sort_patients(sort_by: str = Query(..., description='Sort on the basis of height, weight or BMI'),
+def sort_patients(sort_by: str = Query(..., description='Sort on the basis of height, weight or BMI'), #... means that parameter is required..........
                   order: str = Query('desc', description='Sort in asc or desc order')):
 
     valid_fields = ['height', 'weight', 'bmi']
