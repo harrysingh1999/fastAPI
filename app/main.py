@@ -1,16 +1,20 @@
 import json
 
-
+from app.pydantic.APIModels import Patient
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
 
 def load_data():
-    with open('app\patients.json', 'r') as g:
-        data = json.load(g)
+    with open('app\patients.json', 'r') as f:
+        data = json.load(f)
     return data
 
+def save_data(data):
+    with open('app\patients.json', 'w') as f:
+        json.dump(data, f)
 
 @app.get("/")
 def root():
@@ -50,3 +54,21 @@ def sort_patients(sort_by: str = Query(..., description='Sort on the basis of he
     sort_by, 0), reverse=sort_order)
 
     return sorted_data
+
+
+@app.post('/create')
+def create_patient(patient: Patient):
+    # load existing data
+    data = load_data()
+
+    # check if the patient already exists
+    if patient.id in data:
+        raise HTTPException(status_code=400, detail='Patient already exists')
+
+    # new patient add to the database
+    data[patient.id] = patient.model_dump(exclude=['id'])
+
+    # save the created data.........
+    save_data(data)
+    
+    return JSONResponse(status_code=201, content={'message': 'Patient Created Successfully' })

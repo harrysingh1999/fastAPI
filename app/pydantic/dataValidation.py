@@ -3,7 +3,6 @@ from typing import Optional
 
 # Pydantic provides built in methods and proerties for generic and custom data validation......................
 
-
 class Patient(BaseModel):
     name: str
     email: EmailStr
