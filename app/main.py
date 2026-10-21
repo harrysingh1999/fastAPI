@@ -1,11 +1,10 @@
 import json
 
-from app.pydantic.APIModels import Patient
+from app.pydantic.api_pydantic_models import Patient
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import JSONResponse
 
 app = FastAPI()
-
 
 def load_data():
     with open('app\patients.json', 'r') as f:
@@ -25,7 +24,6 @@ def root():
 def get_patients():
     data = load_data()
     return data
-
 
 @app.get("/patients/{patient_id}")
 def get_patient(patient_id: str):
@@ -54,7 +52,6 @@ def sort_patients(sort_by: str = Query(..., description='Sort on the basis of he
     sort_by, 0), reverse=sort_order)
 
     return sorted_data
-
 
 @app.post('/create')
 def create_patient(patient: Patient):
